@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OPAS Recipe Calculator｜hair OPAS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=DM+Mono:wght@400;500&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p:#0061fe; --p-d:#004bc4; --p-l:#e3edff; --p-ll:#f4f8ff;
+  --bg:#f2f6fe; --card:#fff; --ink:#1b2333; --sub:#5d6679; --line:#d8e1ef;
+  --root:#e9f2ff; --root-b:#a9c8ff; --root-d:#0a56d6;
+  --tip:#fff0f6; --tip-b:#f3b0c9; --tip-d:#cc4579;
+  --acid:#1d9a54; --acid-l:#e2f6ea; --neu:#a87a00; --neu-l:#fff3c9; --alk:#d63636; --alk-l:#fde5e5;
+  --hp-r:#e0322f; --hp-o:#ee7d12; --hp-g:#1d9a54;
+  --r:16px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'BIZ UDGothic',system-ui,sans-serif;font-size:15px;line-height:1.65}
+h1,h2,h3,.klee{font-family:'Klee One','BIZ UDGothic',serif;font-weight:600}
+.num{font-family:'DM Mono',ui-monospace,monospace}
+button{font:inherit;color:inherit}
+header{background:linear-gradient(135deg,var(--p) 0%,#3d86ff 100%);color:#fff;padding:20px 16px 18px;text-align:center}
+header .salon{font-family:'Klee One';font-size:14px;letter-spacing:.25em;opacity:.92}
+header h1{margin:2px 0 0;font-size:23px;letter-spacing:.03em}
+header .by{font-size:11px;opacity:.8;margin-top:4px;font-family:'DM Mono'}
+main{max-width:660px;margin:0 auto;padding:6px 12px 30px}
+.card{background:var(--card);border-radius:var(--r);padding:16px 14px 18px;margin:14px 0;box-shadow:0 1px 3px rgba(0,50,140,.07);border:1px solid var(--line)}
+.sec-h{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:19px;color:var(--p)}
+.step{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 6px;border-radius:999px;background:var(--p);color:#fff;font-family:'DM Mono';font-size:13px;flex:none}
+.tag{font-family:'BIZ UDGothic';font-size:11px;font-weight:400;color:var(--p);background:var(--p-l);border-radius:999px;padding:1px 9px}
+.q{margin:16px 0 7px;font-weight:700;font-size:14px}
+.q small{display:block;font-weight:400;color:var(--sub);font-size:12px}
+.btns{display:flex;flex-wrap:wrap;gap:7px}
+.btn{appearance:none;border:1.5px solid var(--line);background:var(--p-ll);border-radius:12px;padding:8px 13px;font-size:14px;cursor:pointer;min-height:42px;transition:.12s}
+.btn:active{transform:scale(.97)}
+.btn.on{background:var(--p);border-color:var(--p);color:#fff;font-weight:700;box-shadow:0 2px 6px rgba(0,97,254,.3)}
+.btn .pt{font-family:'DM Mono';font-size:11px;opacity:.7;margin-left:5px}
+.btn.sm{min-height:34px;padding:5px 11px;font-size:13px}
+.tabpanel .btn,.part .btn{background:#fff}
+.tabpanel .btn.on,.part .btn.on{background:var(--p)}
+.curls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.curl{appearance:none;border:1.5px solid var(--line);border-radius:14px;background:var(--p-ll);padding:8px 4px 6px;text-align:center;cursor:pointer;color:var(--sub)}
+.curl svg{display:block;width:100%;height:38px}
+.curl .cl{display:block;font-weight:700;color:var(--ink)}
+.curl .pt{font-family:'DM Mono';font-size:11px}
+.curl.on{border-color:var(--p);background:var(--p-l);color:var(--p);box-shadow:inset 0 0 0 1.5px var(--p)}
+.sum{margin-top:16px;padding:10px 12px;border-radius:12px;background:var(--p-ll);display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;flex-wrap:wrap}
+.sum b{font-family:'DM Mono';font-size:18px;color:var(--p)}
+.hint{color:var(--hp-o);font-size:12px;margin-top:6px}
+.muted{color:var(--sub);font-size:13px}
+/* tabs */
+.tabs{display:flex;gap:6px;margin-top:10px}
+.tab{flex:1;appearance:none;padding:11px 6px;border-radius:14px 14px 0 0;border:1.5px solid var(--line);border-bottom:none;font-family:'Klee One';font-weight:600;font-size:17px;cursor:pointer;background:#eef0f5;color:var(--sub);position:relative}
+.tab.root.on{background:var(--root);color:var(--root-d);border-color:var(--root-b)}
+.tab.tip.on{background:var(--tip);color:var(--tip-d);border-color:var(--tip-b)}
+.tab .off{font-family:'DM Mono';font-size:10px;background:#9aa3b5;color:#fff;border-radius:6px;padding:0 5px;margin-left:5px;vertical-align:middle}
+.tabpanel{border:1.5px solid;border-radius:0 0 14px 14px;padding:4px 12px 14px}
+.tabpanel.root{background:var(--root);border-color:var(--root-b)}
+.tabpanel.tip{background:var(--tip);border-color:var(--tip-b)}
+.onrow{display:flex;justify-content:space-between;align-items:center;padding:10px 0 2px;font-weight:700}
+.sw{position:relative;display:inline-block;width:52px;height:30px;flex:none}
+.sw input{opacity:0;width:0;height:0}
+.sw span{position:absolute;inset:0;background:#c3cad8;border-radius:30px;transition:.2s;cursor:pointer}
+.sw span:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.sw input:checked+span{background:var(--p)}
+.sw input:checked+span:before{transform:translateX(22px)}
+.tabpanel .sum{background:rgba(255,255,255,.75)}
+/* HP */
+.hpgrid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:520px){.hpgrid.two{grid-template-columns:1fr 1fr}}
+.hpc{border-radius:14px;padding:12px;border:1.5px solid}
+.hpc.root{background:var(--root);border-color:var(--root-b)}
+.hpc.tip{background:var(--tip);border-color:var(--tip-b)}
+.hpc-l{font-family:'Klee One';font-weight:600;font-size:16px}
+.hpc.root .hpc-l{color:var(--root-d)} .hpc.tip .hpc-l{color:var(--tip-d)}
+.hpc-v{font-family:'DM Mono';font-size:44px;font-weight:500;line-height:1.1;margin:2px 0}
+.hp-r{color:var(--hp-r)} .hp-o{color:var(--hp-o)} .hp-g{color:var(--hp-g)}
+.hpc-b{font-size:12px;color:var(--sub)}
+.inl{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px;font-size:13px}
+.inp{font-family:'DM Mono';font-size:17px;width:92px;padding:7px 9px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.inp:focus{outline:none;border-color:var(--p);box-shadow:0 0 0 3px rgba(0,97,254,.15)}
+.mini{appearance:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer;color:var(--p)}
+.chip{font-size:11px;background:var(--hp-o);color:#fff;border-radius:6px;padding:1px 6px}
+.warn{margin-top:10px;background:#fff5e6;border:1.5px solid #ffc27a;color:#8a4a00;border-radius:12px;padding:9px 11px;font-size:13px}
+.warn.red{background:#fff0f0;border-color:#f3a3a3;color:#a12121}
+.ref{margin-top:8px;font-size:12px;background:rgba(255,255,255,.7);border-radius:10px;padding:6px 9px;color:var(--sub)}
+/* recipe */
+.part.root{background:linear-gradient(180deg,var(--root) 0,#fff 120px);border-color:var(--root-b)}
+.part.tip{background:linear-gradient(180deg,var(--tip) 0,#fff 120px);border-color:var(--tip-b)}
+.part.root .sec-h{color:var(--root-d)} .part.tip .sec-h{color:var(--tip-d)}
+.part.tip .step{background:var(--tip-d)}
+.hpline{font-size:13px;color:var(--sub)}
+.hpline b{font-family:'DM Mono';font-size:20px}
+table{border-collapse:collapse;width:100%}
+.guide{font-size:13px;margin-top:2px}
+.guide th,.guide td{border:1px solid var(--line);padding:7px 6px;text-align:center}
+.guide th{background:var(--p-ll);font-weight:700;font-size:12px}
+.guide td.hpcol{font-family:'DM Mono';white-space:nowrap}
+.guide tr.cur td{background:#fffbe6}
+.guide td.hit{background:var(--p)!important;color:#fff;font-weight:700}
+.allow{margin-top:8px;font-size:14px}
+.allow b{color:var(--p)}
+.tgt{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--p-ll);border-radius:12px;padding:9px 11px;font-size:13px}
+.dmg{margin-top:10px;border:1.5px dashed var(--line);border-radius:12px;padding:9px 11px;background:#fff}
+.dmg-h{font-size:13px;font-weight:700;margin-bottom:6px}
+.dmg-r{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:5px 0;font-size:13px}
+.dmg-r>span{min-width:96px}
+.cand{display:block;width:100%;text-align:left;appearance:none;border:1.5px solid var(--line);border-radius:14px;padding:12px;margin:9px 0;background:#fff;cursor:pointer}
+.cand.sel{border-color:var(--p);box-shadow:inset 0 0 0 1.5px var(--p),0 3px 10px rgba(0,97,254,.12)}
+.cand-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rank{font-size:11px;padding:2px 9px;border-radius:999px;background:var(--p);color:#fff;font-weight:700}
+.rank.alt{background:#8b95a8}
+.pat{font-weight:700;font-size:14px}
+.badge{font-size:11px;padding:2px 8px;border-radius:999px;font-weight:700;margin-left:auto;white-space:nowrap}
+.b-acid{background:var(--acid-l);color:var(--acid);border:1px solid var(--acid)}
+.b-neu{background:var(--neu-l);color:var(--neu);border:1px solid #e0b100}
+.b-alk{background:var(--alk-l);color:var(--alk);border:1px solid var(--alk)}
+.cand-items{margin-top:7px;font-size:13px}
+.cand-items span{display:inline-block;margin-right:8px}
+.cand-rv{margin-top:4px;font-size:13px}
+.cand-rv b{font-family:'DM Mono';font-size:19px;color:var(--p)}
+.notes{margin:6px 0 0;padding:0;list-style:none;font-size:12px;color:var(--sub)}
+.notes li:before{content:"・"}
+.notes li.alk{color:var(--alk)}
+.ratio{margin-top:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px}
+.selmark{font-size:11px;color:var(--p);font-weight:700}
+.zero{background:#fff5f5;border:1.5px solid #f3b4b4;border-radius:12px;padding:10px 12px;font-size:13px;color:#8d2626;margin:9px 0}
+.mix{margin-top:10px;font-size:14px}
+.mix th{font-size:12px;color:var(--sub);font-weight:400;text-align:left;border-bottom:1.5px solid var(--line);padding:5px 4px}
+.mix td{border-bottom:1px solid var(--line);padding:8px 4px;vertical-align:top}
+.mix td.num,.mix th.r{text-align:right;white-space:nowrap}
+.mix tfoot td{font-weight:700;border-bottom:none}
+.brand{display:block;font-size:10px;color:var(--sub)}
+.rvbox{margin-top:10px;background:var(--p);color:#fff;border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:baseline}
+.rvbox .big{font-family:'DM Mono';font-size:30px;font-weight:500}
+.comps{margin-top:8px;display:grid;grid-template-columns:1fr auto;gap:2px 10px;font-size:13px;background:var(--p-ll);border-radius:12px;padding:9px 12px}
+.comps .num{text-align:right}
+.comps .ab{font-family:'DM Mono';font-size:11px;color:var(--sub);margin-right:4px}
+.free{margin-top:14px;border-top:1.5px dashed var(--line);padding-top:10px}
+.free-t{appearance:none;background:none;border:none;color:var(--p);font-weight:700;cursor:pointer;padding:4px 0;font-size:14px}
+.frow{display:flex;gap:6px;align-items:center;margin:6px 0}
+.frow select{flex:1;min-width:0;padding:8px;border:1.5px solid var(--line);border-radius:10px;background:#fff;font:inherit;font-size:13px;color:var(--ink)}
+.frow .inp{width:76px}
+.del{appearance:none;border:none;background:#eef0f5;border-radius:8px;width:34px;height:34px;cursor:pointer;color:var(--sub);flex:none}
+.pbtn{appearance:none;border:none;background:var(--p);color:#fff;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer;width:100%;font-size:15px;margin-top:10px;box-shadow:0 3px 10px rgba(0,97,254,.25)}
+.pbtn.ghost{background:#fff;color:var(--p);border:1.5px solid var(--p);box-shadow:none}
+.share textarea{width:100%;min-height:200px;border:1.5px solid var(--line);border-radius:12px;padding:10px;font-family:'BIZ UDGothic';font-size:12.5px;color:var(--ink);background:var(--p-ll);margin-top:10px}
+.share input[type=date]{font-family:'DM Mono';font-size:15px;padding:7px 9px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+footer{max-width:660px;margin:0 auto;padding:0 12px 40px}
+.disc{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px;font-size:12px;color:var(--sub);line-height:1.75}
+.disc h3{margin:0 0 6px;font-size:14px;color:var(--ink)}
+.disc p{margin:0 0 3px;padding-left:1em;text-indent:-1em}
+.credit{text-align:center;margin-top:16px;font-family:'DM Mono';font-size:12px;color:var(--p)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#1b2333;color:#fff;padding:10px 16px;border-radius:12px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;z-index:10}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<header>
+  <div class="salon">hair OPAS</div>
+  <h1>OPAS Recipe Calculator</h1>
+  <div class="by">Produced by Quantify-Beauty</div>
+</header>
+<main id="app"></main>
+<footer>
+  <div class="disc">
+    <h3>■ 本ツールについての重要事項</h3>
+    <p>・本ツールは、各メーカー様が公表されている薬剤スペックをもとに、混合時の還元剤濃度を計算するための補助ツールです。</p>
+    <p>・本ツールは、各メーカー様による公式な認証・後援を受けたものではありません。本ツールの内容について、各メーカー様は一切の責任を負うものではありません。</p>
+    <p>・本ツール上に表示される濃度・成分情報は推計値を含みます。正確な値については、必ず各メーカー様の製品資料・指示に従ってください。</p>
+    <p>・メーカーをまたぐ薬剤の混合は、施術者の判断と責任のもとで行ってください。</p>
+    <p>・本ツールの利用により生じたいかなる結果についても、運営者（株式会社ImU／Quantify-Beauty）は責任を負いません。ご利用は施術者の責任のもとお願いいたします。</p>
+    <p>・本ツール内で言及される製品名・商品名は、各メーカー様の商標・登録商標です。本ツールはこれらの製品を識別する目的のみで使用しており、商標権者との商業的関係を示すものではありません。</p>
+  </div>
+  <div class="credit">Produced by Quantify-Beauty</div>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== 商品マスタ（hair OPAS 在庫のみ） ===== */
+const ARI='アリミノ クオライン', RB='ReBALANCE';
+const P={
+  T280:  {brand:ARI,name:'T-280',     role:'base',comp:{TGA:10.7},        rv:10.7,ph:9.2,form:'cream'},
+  TC250: {brand:ARI,name:'T-C 250',   role:'base',comp:{TGA:9,CYS:1.7},   rv:10.7,ph:8.9,form:'cream'},
+  CAT200:{brand:ARI,name:'CA-T 200',  role:'base',comp:{TGA:2,CA:5},      rv:7.0, ph:8.8,form:'cream'},
+  CAC130:{brand:ARI,name:'CA-C 130',  role:'base',comp:{CYS:2,CA:5},      rv:7.0, ph:7.7,form:'cream'},
+  CAC110:{brand:ARI,name:'CA-C 110',  role:'base',comp:{CYS:2,CA:5},      rv:7.0, ph:6.0,form:'cream'},
+  CATC100:{brand:ARI,name:'CA-T-C 100',role:'base',comp:{CYS:1,CA:4},     rv:5.0, ph:7.7,form:'cream'},
+  TC80:  {brand:ARI,name:'T-C 80',    role:'base',comp:{TGA:4,CYS:1},     rv:5.0, ph:7.0,form:'cream'},
+  TC50:  {brand:ARI,name:'T-C 50',    role:'base',comp:{TGA:1,CYS:0.9},   rv:1.9, ph:6.0,form:'cream'},
+  ADJ0:  {brand:ARI,name:'アジャストゼロ',role:'dil',comp:{DTDG:1.0},     rv:0,   ph:5.0,form:'cream'},
+  YEL:   {brand:RB, name:'Yellow（クリーム）',short:'Yellow',role:'base',comp:{TGA:0.4,TGr:0.4},rv:0.8,ph:5.0,form:'cream'},
+  PALE:  {brand:RB, name:'Pale Yellow（ジェル）',short:'Pale Yellow',role:'base',comp:{TGr:0.2},rv:0.2,ph:4.0,form:'gel'},
+  RIKO:  {brand:RB, name:'RIKO Treatment',role:'dil',comp:{},             rv:0,   ph:6.0},
+  BOOST: {brand:RB, name:'Booster',   role:'add', comp:{CA:29},           rv:29,  ph:9.6}
+};
+const ARI_BASES=['T280','TC250','CAT200','CAC130','CAC110','CATC100','TC80','TC50'];
+const COMP_ORDER=['TGA','CYS','CA','CA-HCl','TG-CA','TGr','DTDG'];
+const COMP_NAME={TGA:'チオグリコール酸',CYS:'システイン',CA:'システアミン','CA-HCl':'システアミン塩酸塩','TG-CA':'チオグリコール酸システアミン',TGr:'チオグリセリン',DTDG:'DTDG（還元剤外）'};
+const BAND=[{l:'酸性',c:'b-acid'},{l:'中性',c:'b-neu'},{l:'アルカリ',c:'b-alk'}];
+const ALLOW_L=['酸性のみ','中性まで','アルカリまで可'];
+const PN={root:'①根本',tip:'②毛先'};
+/* pH帯：酸性 ≤6.0／中性 6.0超〜8.0未満／アルカリ ≥8.0 */
+const bandOf=ph=>{ph=Math.round(ph*100)/100;return ph<=6.0?0:(ph<8.0?1:2);};
+
+/* ===== 診断項目 ===== */
+const O={
+  thick:[{k:'thick',l:'太毛',v:9},{k:'normal',l:'普通',v:8},{k:'thin',l:'細毛',v:7},{k:'xthin',l:'極細',v:6}],
+  hard:[{k:'hard',l:'硬め',v:2},{k:'normal',l:'普通',v:1},{k:'soft',l:'柔らかめ',v:0},{k:'xsoft',l:'極柔',v:-1}],
+  curl:[{k:'strong',l:'強',v:2,a:11,c:4},{k:'mid',l:'中',v:1,a:6.5,c:2.6},{k:'weak',l:'弱',v:0,a:2.6,c:1.5}],
+  ichi:[{k:'none',l:'使用なし'},{k:'dark',l:'5LV 黒系'},{k:'bright',l:'7LV〜明るめ'}],
+  ichiF:[{k:'m1',l:'1ヶ月毎'},{k:'m2',l:'2ヶ月毎'},{k:'m3',l:'3ヶ月以上'}],
+  ironF:[{k:'daily',l:'ほぼ毎日',v:-1},{k:'weekly',l:'週1回程度',v:-0.5},{k:'none',l:'使用しない',v:0}],
+  ironT:[{k:'t1',l:'140℃未満',v:0},{k:'t2',l:'140〜160℃',v:0},{k:'t3',l:'160〜180℃',v:-0.5},{k:'t4',l:'180℃以上',v:-1}],
+  lv:[{k:'0',l:'カラー無',v:0},{k:'7',l:'〜7LV',v:-1},{k:'10',l:'〜10LV',v:-2},{k:'13',l:'〜13LV',v:-3},{k:'16',l:'〜16LV',v:-4},{k:'17',l:'17LV〜',v:-5}],
+  preLv:[{k:'0',l:'なし',v:0},{k:'7',l:'〜7LV',v:-1},{k:'10',l:'〜10LV',v:-2},{k:'13',l:'〜13LV',v:-3},{k:'16',l:'〜16LV',v:-4},{k:'17',l:'17LV〜',v:-5}],
+  q1:[{k:'3w',l:'3週間以内',v:-5},{k:'other',l:'それ以外',v:0}],
+  oxy:[{k:'6',l:'6%',v:0},{k:'4.5',l:'4.5%',v:1},{k:'3',l:'3%以下',v:2}],
+  rQ2:[{k:'none',l:'なし',v:0},{k:'1w',l:'1週間以内',v:-5},{k:'old',l:'1週間以前',v:0}],
+  rQ3:[{k:'none',l:'なし',v:0},{k:'4m',l:'4ヶ月以内',v:-3},{k:'old',l:'4ヶ月以上',v:0}],
+  rQ4:[{k:'1m',l:'1ヶ月以内',v:-1},{k:'other',l:'それ以外',v:0}],
+  tQ2:[{k:'none',l:'なし',v:0},{k:'2',l:'〜2回',v:0},{k:'3',l:'3回〜',v:-2}],
+  tQ3:[{k:'none',l:'なし',v:0},{k:'2',l:'〜2回',v:0},{k:'3',l:'3回以上',v:-3}],
+  tQ4:[{k:'none',l:'なし',v:0},{k:'12',l:'1〜2回',v:-1},{k:'3',l:'3回以上',v:-3}],
+  touch:[{k:'yes',l:'ハリコシあり'},{k:'no',l:'ハリコシなし'}],
+  policy:[{k:'stretch',l:'伸び重視'},{k:'care',l:'ケア重視'}],
+  dil:[{k:'RIKO',l:'RIKO Treatment'},{k:'ADJ0',l:'アジャストゼロ'}]
+};
+const ICHI_PEN={dark:{m1:-3,m2:-2,m3:-1},bright:{m1:-5,m2:-4,m3:-3}};
+const val=(list,k)=>{const o=O[list].find(x=>x.k===k);return o&&o.v!==undefined?o.v:0;};
+
+/* ===== 状態 ===== */
+const today=()=>{const d=new Date();const z=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());};
+function newPart(k){return{on:true,lv:'0',preLv:'0',q1:'other',oxy:'6',q2:'none',q3:'none',q4:k==='root'?'other':'none',touch:null,
+  hpEdited:false,hpRaw:'',policy:'stretch',tgtEdited:false,tgtRaw:'',T:'50',sel:null,dil1:'RIKO',dil2:'ADJ0',ratio:null,
+  free:[{id:'YEL',g:''},{id:'RIKO',g:''}],freeOpen:false};}
+const state={thick:'normal',hard:'normal',curl:'mid',ichi:'none',ichiF:null,ironF:'none',ironT:'t1',
+  parts:{root:newPart('root'),tip:newPart('tip')},tab:'root',date:today()};
+
+/* ===== ユーティリティ ===== */
+const $=s=>document.querySelector(s);
+const r1=x=>Math.round(x*10)/10;
+const trim=(x,d=2)=>String(Number((+x).toFixed(d)));
+const fmtPt=v=>v>0?'+'+trim(v):(v<0?'−'+trim(Math.abs(v)):'0');
+const fmtPlain=v=>v<0?'−'+trim(Math.abs(v)):trim(v);
+const pnum=s=>{if(s===null||s===undefined)return null;const t=String(s).trim().replace(/[０-９．]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0));if(t===''||isNaN(Number(t)))return null;return Number(t);};
+function setPath(path,v){const ks=path.split('.');let o=state;for(let i=0;i<ks.length-1;i++)o=o[ks[i]];o[ks[ks.length-1]]=v;}
+function getPath(path){return path.split('.').reduce((o,k)=>o==null?o:o[k],state);}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ===== 毛髪体力（HP） ===== */
+const maxHP=()=>val('thick',state.thick)+val('hard',state.hard)+val('curl',state.curl);
+function commonPen(k){let p=val('ironF',state.ironF)+val('ironT',state.ironT);
+  if(k==='tip'&&state.ichi!=='none'&&state.ichiF)p+=ICHI_PEN[state.ichi][state.ichiF];return p;}
+function partPen(k){const s=state.parts[k];let p=val('lv',s.lv)+val('preLv',s.preLv)+val('q1',s.q1);
+  if(k==='root'){if(s.q1==='3w')p+=val('oxy',s.oxy);p+=val('rQ2',s.q2)+val('rQ3',s.q3)+val('rQ4',s.q4);}
+  else p+=val('tQ2',s.q2)+val('tQ3',s.q3)+val('tQ4',s.q4);return p;}
+function calcHP(k){const m=maxHP(),c=commonPen(k),p=partPen(k),raw=m+c+p;return{m,c,p,raw,hp:Math.max(0,raw)};}
+function effHP(k){const s=state.parts[k];if(s.hpEdited){const v=pnum(s.hpRaw);if(v!==null&&v>=0)return v;}return calcHP(k).hp;}
+function targetOf(k){const s=state.parts[k];if(s.tgtEdited){const v=pnum(s.tgtRaw);if(v!==null&&v>=0)return v;}return effHP(k);}
+const hpCls=h=>h>=10?'hp-r':(h>=7?'hp-o':'hp-g');
+function allowedMax(hp,pol){if(hp>=10)return 2;if(hp>=7)return pol==='stretch'?2:1;if(hp>=4)return pol==='stretch'?1:0;return 0;}
+
+/* ===== 候補レシピ ===== */
+const YPH=[[0,5.0],[5,6.0],[10,7.0],[15,8.0],[20,9.0],[25,9.6]];
+function boostPh(a,baseId){let ph=YPH[YPH.length-1][1];
+  for(let i=0;i<YPH.length-1;i++){const[x0,y0]=YPH[i],[x1,y1]=YPH[i+1];if(a<=x1){ph=y0+(y1-y0)*(a-x0)/(x1-x0);break;}}
+  return baseId==='PALE'?ph-0.5:ph;}
+const crossNote='メーカーをまたぐ混合（施術者の判断で使用）';
+
+/* ① ReBALANCEメイン */
+function pat1(t,pol,hp,am,o){
+  const base=pol==='stretch'?'YEL':'PALE',B=P[base].rv;const r={id:'p1',name:'① ReBALANCEメイン',notes:[],booster:false};
+  if(t<B-1e-9){const bf=t/B,dil=o.dil1;
+    r.items=[{id:base,f:bf},{id:dil,f:1-bf}];r.ph=P[base].ph;r.band=0;r.sortPh=r.ph;r.dev=1-bf;
+    r.notes.push(`${P[base].short}を${P[dil].name}で希釈（目標値がベース値未満）`);if(dil==='ADJ0')r.notes.push(crossNote);
+  }else if(Math.abs(t-B)<1e-9){r.items=[{id:base,f:1}];r.ph=P[base].ph;r.band=0;r.sortPh=r.ph;r.dev=0;}
+  else{if(t>=29)return null;const a=100*(t-B)/(29-t);if(a>25+1e-9)return null;
+    const ph=Math.round(boostPh(a,base)*100)/100,band=bandOf(ph);if(band>am)return null;
+    const bf=a/(100+a);r.items=[{id:base,f:1-bf},{id:'BOOST',f:bf}];r.ph=ph;r.band=band;r.sortPh=ph;r.dev=bf;r.booster=true;
+    r.notes.push(`Booster添加率 ${a.toFixed(1)}%（全体の${(bf*100).toFixed(1)}%）／混合pH ${ph.toFixed(1)}（推定）`);}
+  r.cs=pol==='stretch'?1:2;return r;}
+
+/* ② 他社メイン（アリミノ クオライン） */
+function pat2(t,pol,hp,am,o){
+  const r={id:'p2',name:'② 他社メイン（アリミノ クオライン）',notes:[],booster:false};let main,dil;
+  if(hp<4){ /* ダメージ毛：T-C 80／T-C 50 ＋ 希釈で調整 */
+    if(t<=1.9+1e-9)main='TC50';else if(t<5.0-1e-9)main='TC80';else return null;dil=o.dil2;
+    r.band=0;r.ph=P[main].ph;
+    if(main==='TC80'){r.phLabel='弱酸性寄り（推定）';r.sortPh=6.5;r.notes.push(`T-C 80（pH7.0）を${P[dil].name}で希釈し、pH7未満の弱酸性寄りで使用`);}
+    else r.sortPh=P[main].ph;
+  }else{
+    const list=ARI_BASES.filter(id=>bandOf(P[id].ph)<=am&&P[id].rv>=t-1e-9).sort((a,b)=>(P[a].rv-P[b].rv)||(P[a].ph-P[b].ph));
+    if(!list.length)return null;main=list[0];dil='ADJ0';r.ph=P[main].ph;r.band=bandOf(r.ph);r.sortPh=r.ph;}
+  const mf=Math.min(1,t/P[main].rv);r.items=[{id:main,f:mf}];if(mf<1-1e-9)r.items.push({id:dil,f:1-mf});
+  if(mf<1-1e-9)r.notes.push(`主剤 ${P[main].name} を${P[dil].name}で希釈（pH帯は主剤で判定）`);
+  if(dil==='RIKO')r.notes.push(crossNote);
+  r.dev=1-mf;r.cs=pol==='stretch'?1:(r.band===0?1:0);return r;}
+
+/* ③ ミックス（チオ系＋Booster＋ReBALANCE） */
+const STAGES=[{id:'TC80',l:'弱'},{id:'CAT200',l:'中'},{id:'T280',l:'強'}];
+function pat3(t,pol,hp,am,o){
+  const base=pol==='stretch'?'YEL':'PALE',ratio=o.ratio/100,C=P[base].rv*ratio;
+  if(t<=C+1e-9)return null;let st=null,M=0;
+  for(const s of STAGES){const m=(P[s.id].rv*100+29*20)/120;if(m>=t-1e-9){st=s;M=m;break;}}
+  if(!st)return null;const band=bandOf(P[st.id].ph);if(band>am)return null;
+  const mainF=(t-C)/(M-C),thio=mainF*100/120,bo=mainF*20/120,side=1-mainF,bF=side*ratio,rF=side-bF;
+  const items=[{id:st.id,f:thio},{id:'BOOST',f:bo}];if(bF>1e-9)items.push({id:base,f:bF});if(rF>1e-9)items.push({id:'RIKO',f:rF});
+  return{id:'p3',name:'③ ミックス（アリミノ＋ReBALANCE）',items,band,ph:P[st.id].ph,sortPh:P[st.id].ph,booster:true,dev:1-thio,cs:pol==='stretch'?1:0,
+    notes:[`チオ系【${st.l}】${P[st.id].name}：Booster＝100：20（主剤 ${M.toFixed(2)}%）`,`pH帯は主剤（チオ系）で表示・混合後pHは未計算`,crossNote]};}
+
+function partResult(k){
+  const s=state.parts[k],hp=effHP(k),t=targetOf(k),am=allowedMax(hp,s.policy);
+  const ratio=s.ratio||(hp<4?'50':'100');
+  const o={dil1:hp<4?s.dil1:'RIKO',dil2:hp<4?s.dil2:'ADJ0',ratio:Number(ratio)};
+  let cands=t>0?[pat1(t,s.policy,hp,am,o),pat2(t,s.policy,hp,am,o),pat3(t,s.policy,hp,am,o)].filter(Boolean):[];
+  const dmg=hp<7; /* ダメージ毛はpHの低い順を最優先 */
+  cands.sort((a,b)=>dmg?((a.sortPh-b.sortPh)||(b.cs-a.cs)||(a.dev-b.dev)):((b.cs-a.cs)||(a.dev-b.dev)||(a.sortPh-b.sortPh)));
+  const T=pnum(s.T);let selId=s.sel;
+  if(selId!=='free'&&!cands.some(c=>c.id===selId))selId=cands[0]?cands[0].id:null;
+  let rows=null,an=null,selName=null;
+  if(selId==='free'){rows=s.free.map(r=>({id:r.id,g:r1(pnum(r.g)||0)})).filter(r=>r.g>0);an=analyze(rows);selName='フリー配合（手入力）';}
+  else if(selId&&T>0){const c=cands.find(x=>x.id===selId);rows=toGrams(c.items,T);an=analyze(rows);selName=c.name;}
+  return{hp,t,am,cands,selId,rows,an,selName,T,ratio,dmg};}
+
+function toGrams(items,T){const rows=items.map(it=>({id:it.id,g:r1(T*it.f)}));
+  const diff=r1(T-rows.reduce((a,b)=>a+b.g,0));
+  if(rows.length&&Math.abs(diff)>1e-9){let mi=0;rows.forEach((r,i)=>{if(r.g>rows[mi].g)mi=i;});rows[mi].g=r1(rows[mi].g+diff);}
+  return rows.filter(r=>r.g>0);}
+function analyze(rows){if(!rows||!rows.length)return null;const tot=rows.reduce((a,r)=>a+r.g,0);if(tot<=0)return null;
+  let rv=0,ph=0;const comp={};rows.forEach(r=>{const p=P[r.id];rv+=r.g*p.rv;ph+=r.g*p.ph;for(const c in p.comp)comp[c]=(comp[c]||0)+r.g*p.comp[c];});
+  for(const c in comp)comp[c]/=tot;return{tot,rv:rv/tot,ph:ph/tot,comp};}
+
+/* ===== 描画パーツ ===== */
+function btn(path,k,label,pt,extra=''){const on=getPath(path)===k;
+  return `<button type="button" class="btn${on?' on':''}${extra}" data-set="${path}" data-val="${k}">${label}${pt!==undefined&&pt!==null?`<span class="pt">${pt}</span>`:''}</button>`;}
+function bg(path,list,opt={}){return `<div class="btns">${O[list].map(o=>{
+  const pt=opt.pts===false||o.v===undefined?null:(opt.plain?fmtPlain(o.v):fmtPt(o.v));
+  return btn(path,o.k,o.l,pt).replace('<button',opt.tog?'<button data-tog':'<button');}).join('')}</div>`;}
+function wave(a,c){let d='';for(let i=0;i<=80;i++){const x=6+i*88/80,y=19+a*Math.sin(i/80*c*2*Math.PI);d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' ';}
+  return `<svg viewBox="0 0 100 38" aria-hidden="true"><path d="${d}" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>`;}
+
+function secHair(){return `<section class="card"><h2 class="sec-h"><span class="step">1</span>毛質診断<span class="tag">共通</span></h2>
+<div class="q">太さ</div>${bg('thick','thick',{plain:true})}
+<div class="q">硬さ</div>${bg('hard','hard',{plain:true})}
+<div class="q">癖</div><div class="curls">${O.curl.map(o=>`<button type="button" class="curl${state.curl===o.k?' on':''}" data-set="curl" data-val="${o.k}">${wave(o.a,o.c)}<span class="cl">${o.l}</span><span class="pt">${o.v}</span></button>`).join('')}</div>
+<div class="sum"><span>最大HP（太さ＋硬さ＋癖）</span><b>${trim(maxHP())}</b></div></section>`;}
+
+function secCommon(){const f=state.ichi!=='none';return `<section class="card"><h2 class="sec-h"><span class="step">2</span>問診0・アイロン<span class="tag">共通</span></h2>
+<div class="q">問診0　市販ヘアカラーの使用<small>※毛先のHPにのみ反映します</small></div>${bg('ichi','ichi',{pts:false})}
+${f?`<div class="q">使用頻度</div><div class="btns">${O.ichiF.map(o=>btn('ichiF',o.k,o.l,fmtPt(ICHI_PEN[state.ichi][o.k]))).join('')}</div>${state.ichiF?'':'<div class="hint">頻度を選択してください（未選択の間は減点0）</div>'}`:''}
+<div class="q">アイロン頻度</div>${bg('ironF','ironF')}
+<div class="q">アイロン温度</div>${bg('ironT','ironT')}
+<div class="sum"><span>共通減点</span><span>根本 <b>${fmtPt(commonPen('root'))}</b>　毛先 <b>${fmtPt(commonPen('tip'))}</b></span></div></section>`;}
+
+function secParts(){const k=state.tab,s=state.parts[k],R=k==='root';
+  const fields=`<div class="q">視診　ヘアカラー明度</div>${bg(`parts.${k}.lv`,'lv')}
+<div class="q">黒染め・トーンダウン前の最高明度</div>${bg(`parts.${k}.preLv`,'preLv')}
+<div class="q">問診1　ヘアカラー頻度<small>ヘナ・マニキュア・カラーシャンプー等は「それ以外」</small></div>${bg(`parts.${k}.q1`,'q1')}
+${R&&s.q1==='3w'?`<div class="q">使用オキシ</div>${bg('parts.root.oxy','oxy')}`:''}
+<div class="q">問診2　${R?'ブリーチ歴':'ブリーチ累計'}</div>${bg(`parts.${k}.q2`,R?'rQ2':'tQ2')}
+<div class="q">問診3　${R?'縮毛矯正歴':'縮毛矯正累計'}</div>${bg(`parts.${k}.q3`,R?'rQ3':'tQ3')}
+<div class="q">問診4　${R?'全体染め':'全体染め累計'}</div>${bg(`parts.${k}.q4`,R?'rQ4':'tQ4')}
+<div class="q">触診　ウェット時のハリコシ<small>記録のみ（HP補正の参考として表示）</small></div>${bg(`parts.${k}.touch`,'touch',{pts:false,tog:true})}
+<div class="sum"><span>部位別減点</span><b>${fmtPt(partPen(k))}</b></div>`;
+  return `<section class="card"><h2 class="sec-h"><span class="step">3</span>部位別の視診・問診・触診</h2>
+<div class="tabs">${['root','tip'].map(p=>`<button type="button" class="tab ${p}${state.tab===p?' on':''}" data-act="tab" data-part="${p}">${PN[p]}${state.parts[p].on?'':'<span class="off">OFF</span>'}</button>`).join('')}</div>
+<div class="tabpanel ${k}"><div class="onrow"><span>${PN[k]}を診断・計算する</span><label class="sw"><input type="checkbox" data-chk="parts.${k}.on" ${s.on?'checked':''}><span></span></label></div>
+${s.on?fields:'<p class="muted">OFF：この部位は診断・レシピ計算を行いません。</p>'}</div></section>`;}
+
+function hpCard(k){const s=state.parts[k],c=calcHP(k),h=effHP(k);
+  const v=s.hpEdited?s.hpRaw:trim(c.hp);
+  return `<div class="hpc ${k}"><div class="hpc-l">${PN[k]}</div>
+<div class="hpc-v ${hpCls(h)}">${trim(h)}</div>
+<div class="hpc-b">最大 ${trim(c.m)}　共通 ${fmtPt(c.c)}　部位 ${fmtPt(c.p)}${c.raw<0?'（下限0）':''}</div>
+<div class="inl">手動補正 <input id="hp-${k}" class="inp" inputmode="decimal" autocomplete="off" data-inp="parts.${k}.hpRaw" data-flag="parts.${k}.hpEdited" value="${esc(v)}">
+${s.hpEdited?`<span class="chip">手動</span><button type="button" class="mini" data-act="resetHP" data-part="${k}">診断値に戻す（${trim(c.hp)}）</button>`:''}</div>
+${c.hp===0?`<div class="warn">⚠ HPが0です。クセ戻りがある場合→HP 0.5〜3を手動入力／ない場合→HP 0.1推奨。ウェット触診でハリコシあり→0.5〜3、なし→0.1〜0.5</div>`:''}
+${s.touch?`<div class="ref">触診メモ：ウェット時${s.touch==='yes'?'ハリコシあり（HP補正の目安 0.5〜3）':'ハリコシなし（HP補正の目安 0.1〜0.5）'}</div>`:''}</div>`;}
+
+function secHP(){const on=['root','tip'].filter(k=>state.parts[k].on);
+  return `<section class="card"><h2 class="sec-h"><span class="step">4</span>毛髪体力（HP）</h2>
+<p class="muted" style="margin:0 0 10px">HPの数値を、そのまま目標還元値（%）として薬剤を提案します。</p>
+${on.length?`<div class="hpgrid${on.length===2?' two':''}">${on.map(hpCard).join('')}</div>`:'<p class="muted">根本・毛先ともOFFです。</p>'}</section>`;}
+
+function guideTable(hp,pol){const rows=[{l:'10以上',s:2,c:2,on:hp>=10},{l:'7〜10未満',s:2,c:1,on:hp>=7&&hp<10},{l:'4〜7未満',s:1,c:0,on:hp>=4&&hp<7},{l:'4未満',s:0,c:0,on:hp<4}];
+  return `<table class="guide"><thead><tr><th>HP</th><th>伸び重視</th><th>ケア重視</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="${r.on?'cur':''}"><td class="hpcol">${r.l}</td><td class="${r.on&&pol==='stretch'?'hit':''}">${ALLOW_L[r.s]}</td><td class="${r.on&&pol==='care'?'hit':''}">${ALLOW_L[r.c]}${i===0?'<br><small>（注意喚起）</small>':''}</td></tr>`).join('')}</tbody></table>`;}
+
+function candCard(c,i,R,k){const sel=R.selId===c.id,b=BAND[c.band];
+  const phTxt=c.phLabel?c.phLabel:`${b.l} pH${c.ph.toFixed(1)}${c.id==='p1'?'':'（主剤）'}`;
+  const tot=c.items.reduce((a,x)=>a+x.f,0);
+  let ratioUI='';
+  if(c.id==='p3'){const base=state.parts[k].policy==='stretch'?'Yellow':'Pale Yellow';
+    ratioUI=`<div class="ratio">希釈側 ${base}：RIKO ${[['100','10:0'],['75','3:1'],['50','1:1'],['25','1:3']].map(([v,l])=>`<button type="button" class="btn sm${R.ratio===v?' on':''}" data-set="parts.${k}.ratio" data-val="${v}">${l}</button>`).join('')}</div>`;}
+  return `<div class="cand${sel?' sel':''}" role="button" tabindex="0" data-act="select" data-part="${k}" data-id="${c.id}">
+<div class="cand-top"><span class="rank${i?' alt':''}">${i?'代替'+i:'推奨'}</span><span class="pat">${c.name}</span><span class="badge ${b.c}">${phTxt}</span></div>
+<div class="cand-items">${c.items.map(x=>`<span>${P[x.id].name} <b class="num">${(x.f/tot*100).toFixed(1)}%</b></span>`).join('')}</div>
+<div class="cand-rv">総還元値 <b>${R.t.toFixed(3)}</b>%　${sel?'<span class="selmark">✓ 選択中</span>':''}</div>
+<ul class="notes">${c.booster?'<li class="alk">Booster配合のためアルカリ寄り</li>':''}${c.notes.map(n=>`<li>${n}</li>`).join('')}</ul>${ratioUI}</div>`;}
+
+function detailHTML(rows,an){if(!an)return '';
+  const comps=COMP_ORDER.filter(c=>an.comp[c]>0);
+  return `<table class="mix"><thead><tr><th>薬剤</th><th class="r">配合量</th><th class="r">比率</th></tr></thead><tbody>
+${rows.map(r=>`<tr><td><span class="brand">${P[r.id].brand}</span>${P[r.id].name}</td><td class="num">${r.g.toFixed(1)} g</td><td class="num">${(r.g/an.tot*100).toFixed(1)}%</td></tr>`).join('')}</tbody>
+<tfoot><tr><td>合計</td><td class="num">${an.tot.toFixed(1)} g</td><td></td></tr></tfoot></table>
+<div class="rvbox"><span>総還元値</span><span><span class="big">${an.rv.toFixed(3)}</span> %</span></div>
+${comps.length?`<div class="comps">${comps.map(c=>`<span><span class="ab">${c}</span>${COMP_NAME[c]}</span><span class="num">${an.comp[c].toFixed(3)}%</span>`).join('')}</div>`:'<p class="muted">還元剤を含みません。</p>'}`;}
+
+function freeHTML(k,R){const s=state.parts[k],open=s.freeOpen||R.cands.length===0;
+  const opts=id=>Object.keys(P).map(p=>`<option value="${p}"${p===id?' selected':''}>${P[p].brand==='ReBALANCE'?'RB':'AR'}｜${P[p].name}（${P[p].rv}%・pH${P[p].ph}）</option>`).join('');
+  if(!open)return `<div class="free"><button type="button" class="free-t" data-act="freeToggle" data-part="${k}">＋ フリー配合（在庫から手入力で計算）</button></div>`;
+  const rows=s.free.map(r=>({id:r.id,g:r1(pnum(r.g)||0)})).filter(r=>r.g>0),an=analyze(rows);
+  return `<div class="free"><button type="button" class="free-t" data-act="freeToggle" data-part="${k}">− フリー配合（在庫から手入力で計算）</button>
+${s.free.map((r,i)=>`<div class="frow"><select id="fs-${k}-${i}" data-inp="parts.${k}.free.${i}.id">${opts(r.id)}</select><input id="fg-${k}-${i}" class="inp" inputmode="decimal" autocomplete="off" placeholder="g" data-inp="parts.${k}.free.${i}.g" value="${esc(r.g)}"><button type="button" class="del" data-act="delFree" data-part="${k}" data-i="${i}" aria-label="削除">×</button></div>`).join('')}
+<button type="button" class="mini" data-act="addFree" data-part="${k}">＋ 薬剤を追加</button>
+${an?`<div class="tgt" style="margin-top:10px">合計 <b class="num">${an.tot.toFixed(1)}g</b>　総還元値 <b class="num">${an.rv.toFixed(3)}%</b>　参考pH <b class="num">${an.ph.toFixed(1)}</b><small>（単純加重平均・推定）</small></div>
+<button type="button" class="pbtn ghost" data-act="useFree" data-part="${k}">${R.selId==='free'?'✓ この配合を採用中':'この配合を採用する'}</button>`:'<p class="muted">薬剤とg数を入力すると計算します。</p>'}</div>`;}
+
+function secRecipe(k){const s=state.parts[k],R=partResult(k);
+  const tv=s.tgtEdited?s.tgtRaw:trim(R.hp);
+  let body;
+  if(R.t<=0)body=`<div class="zero">目標値が0です。毛髪体力の警告を参考に、HPまたは目標還元値を入力してください。</div>`;
+  else if(!R.cands.length)body=`<div class="zero">現在の条件（許容：${ALLOW_L[R.am]}）で作れるレシピがありません。<br>目標還元値を調整するか、下のフリー配合で計算してください。</div>`;
+  else body=R.cands.map((c,i)=>candCard(c,i,R,k)).join('');
+  return `<section class="card part ${k}"><h2 class="sec-h"><span class="step">5–8</span>${PN[k]}のレシピ</h2>
+<div class="hpline">毛髪体力 <b class="${hpCls(R.hp)}">${trim(R.hp)}</b></div>
+<div class="q">方針</div>${bg(`parts.${k}.policy`,'policy',{pts:false})}
+<div class="q">毛髪体力に合わせた薬剤の目安</div>${guideTable(R.hp,s.policy)}
+<div class="allow">許容pH帯：<b>${ALLOW_L[R.am]}</b>${R.dmg?'　<small class="muted">（HP7未満：pHの低い順に提案）</small>':''}</div>
+<div class="q">候補レシピ</div>
+<div class="tgt">目標還元値 <input id="tgt-${k}" class="inp" inputmode="decimal" autocomplete="off" data-inp="parts.${k}.tgtRaw" data-flag="parts.${k}.tgtEdited" value="${esc(tv)}"> %
+${s.tgtEdited?`<button type="button" class="mini" data-act="resetTgt" data-part="${k}">HPに戻す</button>`:'<small class="muted">初期値＝HP</small>'}</div>
+${R.hp<4?`<div class="dmg"><div class="dmg-h">ダメージ毛（HP 4未満）：希釈剤を選べます</div>
+<div class="dmg-r"><span>① ReBALANCE</span>${btn(`parts.${k}.dil1`,'RIKO','RIKO Treatment',null,' sm')}${btn(`parts.${k}.dil1`,'ADJ0','アジャストゼロ',null,' sm')}</div>
+<div class="dmg-r"><span>② アリミノ</span>${btn(`parts.${k}.dil2`,'ADJ0','アジャストゼロ',null,' sm')}${btn(`parts.${k}.dil2`,'RIKO','RIKO Treatment',null,' sm')}</div></div>`:''}
+${R.hp>=10&&s.policy==='care'&&R.cands.length?'<div class="warn red">⚠ ローダメージ毛のためアルカリ領域まで提案しています。軟化テストをしっかり行ってください</div>':''}
+${body}
+<div class="q">塗布量と配合</div>
+<div class="tgt">塗布量 <input id="T-${k}" class="inp" inputmode="decimal" autocomplete="off" data-inp="parts.${k}.T" value="${esc(s.T)}"> g${R.selName?`　<small class="muted">選択中：${R.selName}</small>`:''}</div>
+${R.an?detailHTML(R.rows,R.an):`<p class="muted">${R.selId==='free'?'フリー配合の薬剤とg数を入力してください。':'候補を選び、塗布量を入力すると配合量を表示します。'}</p>`}
+${freeHTML(k,R)}</section>`;}
+
+function shareText(){const L=['【hair OPAS】OPAS Recipe Calculator',`施術日：${state.date||'-'}`];
+  ['root','tip'].forEach(k=>{const s=state.parts[k];if(!s.on)return;const R=partResult(k);
+    L.push('',`■ ${PN[k]}`,`毛髪体力（HP）：${trim(R.hp)}${s.hpEdited?'（手動補正）':''}`,`方針：${s.policy==='stretch'?'伸び重視':'ケア重視'}（許容：${ALLOW_L[R.am]}）`);
+    if(s.tgtEdited)L.push(`目標還元値：${trim(R.t)}%（手入力）`);
+    if(R.an){L.push(`レシピ：${R.selName}`);R.rows.forEach(r=>L.push(`・${P[r.id].name}：${r.g.toFixed(1)}g`));L.push(`塗布量：${R.an.tot.toFixed(1)}g／総還元値：${R.an.rv.toFixed(3)}%`);}
+    else L.push('レシピ：未選択');});
+  L.push('','Produced by Quantify-Beauty');return L.join('\n');}
+
+function secShare(){return `<section class="card share"><h2 class="sec-h"><span class="step">9</span>診断結果を共有</h2>
+<div class="inl">施術日 <input type="date" id="date" data-inp="date" value="${esc(state.date)}"></div>
+<button type="button" class="pbtn" data-act="copy">共有テキストをコピー（LINE等）</button>
+<textarea id="shareTA" readonly>${esc(shareText())}</textarea></section>`;}
+
+function render(){
+  const ae=document.activeElement;let fid=null,ss=null,se=null;
+  if(ae&&ae.id&&ae.dataset&&ae.dataset.inp!==undefined){fid=ae.id;try{ss=ae.selectionStart;se=ae.selectionEnd;}catch(e){}}
+  const on=['root','tip'].filter(k=>state.parts[k].on);
+  $('#app').innerHTML=[secHair(),secCommon(),secParts(),secHP(),...on.map(secRecipe),secShare()].join('');
+  if(fid){const el=document.getElementById(fid);if(el){el.focus({preventScroll:true});try{if(ss!==null)el.setSelectionRange(ss,se);}catch(e){}}}
+}
+
+/* ===== イベント ===== */
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);}
+async function copyShare(){const txt=shareText();
+  try{await navigator.clipboard.writeText(txt);toast('コピーしました。LINE等に貼り付けてください');}
+  catch(e){const ta=$('#shareTA');ta.focus();ta.select();try{document.execCommand('copy');toast('コピーしました');}catch(_){toast('選択されたテキストを長押しでコピーしてください');}}}
+document.addEventListener('click',e=>{
+  const sb=e.target.closest('[data-set]');
+  if(sb){const p=sb.dataset.set,v=sb.dataset.val;if(sb.hasAttribute('data-tog')&&getPath(p)===v)setPath(p,null);else setPath(p,v);render();return;}
+  const a=e.target.closest('[data-act]');if(!a)return;const k=a.dataset.part,s=k?state.parts[k]:null;
+  switch(a.dataset.act){
+    case 'tab':state.tab=k;break;
+    case 'resetHP':s.hpEdited=false;s.hpRaw='';break;
+    case 'resetTgt':s.tgtEdited=false;s.tgtRaw='';break;
+    case 'select':s.sel=a.dataset.id;break;
+    case 'addFree':s.free.push({id:'YEL',g:''});s.freeOpen=true;break;
+    case 'delFree':s.free.splice(+a.dataset.i,1);s.freeOpen=true;break;
+    case 'useFree':s.sel='free';s.freeOpen=true;break;
+    case 'freeToggle':s.freeOpen=!(s.freeOpen||partResult(k).cands.length===0);break;
+    case 'copy':copyShare();return;
+    default:return;}
+  render();});
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.cand')){e.preventDefault();e.target.click();}});
+document.addEventListener('input',e=>{const el=e.target;if(!el.dataset||el.dataset.inp===undefined)return;setPath(el.dataset.inp,el.value);if(el.dataset.flag)setPath(el.dataset.flag,true);render();});
+document.addEventListener('change',e=>{const el=e.target;if(el.dataset&&el.dataset.chk){setPath(el.dataset.chk,el.checked);render();}});
+render();
+</script>
+</body>
+</html>
